@@ -4,7 +4,7 @@
     if ( !empty($_GET['id'])) {
         $id = $_REQUEST['id'];
     }
-     
+
     if ( null==$id ) {
         header("Location: index.php");
     } else {
@@ -17,23 +17,23 @@
         Database::disconnect();
     }
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 </head>
- 
+
 <body>
     <div class="container">
-     
+
                 <div class="span10 offset1">
                     <div class="row">
                         <h3>Read a Customer</h3>
                     </div>
-                     
+
                     <div class="form-horizontal" >
                       <div class="control-group">
                         <label class="control-label">Name</label>
@@ -62,11 +62,11 @@
                         <div class="form-actions">
                           <a class="btn" href="index.php">Back</a>
                        </div>
-                     
-                      
+
+
                     </div>
                 </div>
-                 
+
     </div> <!-- /container -->
   </body>
 </html>

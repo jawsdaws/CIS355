@@ -1,25 +1,25 @@
 <?php
-     
+
     require 'database.php';
- 
+
     if ( !empty($_POST)) {
         // keep track validation errors
         $nameError = null;
         $emailError = null;
         $mobileError = null;
-         
+
         // keep track post values
         $name = $_POST['name'];
         $email = $_POST['email'];
         $mobile = $_POST['mobile'];
-         
+
         // validate input
         $valid = true;
         if (empty($name)) {
             $nameError = 'Please enter Name';
             $valid = false;
         }
-         
+
         if (empty($email)) {
             $emailError = 'Please enter Email Address';
             $valid = false;
@@ -27,12 +27,12 @@
             $emailError = 'Please enter a valid Email Address';
             $valid = false;
         }
-         
+
         if (empty($mobile)) {
             $mobileError = 'Please enter Mobile Number';
             $valid = false;
         }
-         
+
         // insert data
         if ($valid) {
             $pdo = Database::connect();
@@ -51,18 +51,18 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 </head>
- 
+
 <body>
     <div class="container">
-     
+
                 <div class="span10 offset1">
                     <div class="row">
                         <h3>Create a Customer</h3>
                     </div>
-             
+
                     <form class="form-horizontal" action="create.php" method="post">
                       <div class="control-group <?php echo !empty($nameError)?'error':'';?>">
                         <label class="control-label">Name</label>
@@ -97,7 +97,7 @@
                         </div>
                     </form>
                 </div>
-                 
+
     </div> <!-- /container -->
   </body>
 </html>

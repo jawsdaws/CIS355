@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 </head>
- 
+
 <body>
     <div class="container">
             <div class="row">
@@ -15,7 +15,7 @@
                 <p>
                     <a href="create.php" class="btn btn-success">Create</a>
                 </p>
-                 
+
                 <table class="table table-striped table-bordered">
                       <thead>
                         <tr>
