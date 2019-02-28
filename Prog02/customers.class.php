@@ -38,7 +38,7 @@ class Customer {
         $this->generate_html_bottom(3);
     } // end function update_record()
 
-    function delete_record($id) { // display "read" form
+    function delete_record($id) { // display "delete" form
         $this->select_db_record($id);
         $this->generate_html_top(4, $id);
         $this->generate_form_group("name", $this->nameError, $this->name, "disabled");
@@ -258,6 +258,10 @@ class Customer {
             <body>
                 <div class='container'>
                     <a class='btn btn-success' href='https://github.com/jawsdaws/CIS355/tree/master/Prog02'>Github Repo</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/uml.png'>UML</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/read.png'>Read</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/update.png'>Update</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/delete.png'>Delete</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
                     </p>
