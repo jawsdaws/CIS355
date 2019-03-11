@@ -1,69 +1,66 @@
 <?php
 
-class Event { 
+class Customer {
     public $id;
-    public $event_date;
-    public $event_time;
-    public $event_location;
-	public $event_description;
+    public $name;
+    public $email;
+    public $mobile;
     private $noerrors = true;
-    private $event_dateError = null;
-    private $event_timeError = null;
-    private $event_locationError = null;
-	private $event_descriptionError = null;
-    private $title = "Event"; // the word that appears at the top of forms
-    private $tableName = "events"; // MySQL database table name
-    
+    private $nameError = null;
+    private $emailError = null;
+    private $mobileError = null;
+    private $title = "Customer";
+    private $tableName = "customers";
+
     function create_record() { // display "create" form
         $this->generate_html_top (1);
-        $this->generate_form_group("event_date", $this->event_dateError, $this->event_date, "autofocus", "date");
-        $this->generate_form_group("event_time", $this->event_timeError, $this->event_time, "", "time");
-        $this->generate_form_group("event_location", $this->event_locationError, $this->event_location);
-		$this->generate_form_group("event_description", $this->event_descriptionError, $this->event_description);
+        $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
+        $this->generate_form_group("email", $this->emailError, $this->email);
+        $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
         $this->generate_html_bottom (1);
     } // end function create_record()
-    
+
     function read_record($id) { // display "read" form
         $this->select_db_record($id);
         $this->generate_html_top(2);
-        $this->generate_form_group("event_date", $this->event_dateError, $this->event_date, "disabled");
-        $this->generate_form_group("event_time", $this->event_timeError, $this->event_time, "disabled");
-        $this->generate_form_group("event_location", $this->event_locationError, $this->event_location, "disabled");
+        $this->generate_form_group("name", $this->nameError, $this->name, "disabled");
+        $this->generate_form_group("email", $this->emailError, $this->email, "disabled");
+        $this->generate_form_group("mobile", $this->mobileError, $this->mobile, "disabled");
         $this->generate_html_bottom(2);
     } // end function read_record()
-    
+
     function update_record($id) { // display "update" form
         if($this->noerrors) $this->select_db_record($id);
         $this->generate_html_top(3, $id);
-        $this->generate_form_group("event_date", $this->event_dateError, $this->event_date, "autofocus onfocus='this.select()'");
-        $this->generate_form_group("event_time", $this->event_timeError, $this->event_time);
-        $this->generate_form_group("event_location", $this->event_locationError, $this->event_location);
+        $this->generate_form_group("name", $this->nameError, $this->name, "autofocus onfocus='this.select()'");
+        $this->generate_form_group("email", $this->emailError, $this->email);
+        $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
         $this->generate_html_bottom(3);
     } // end function update_record()
-    
-    function delete_record($id) { // display "read" form
+
+    function delete_record($id) { // display "delete" form
         $this->select_db_record($id);
         $this->generate_html_top(4, $id);
-        $this->generate_form_group("event_date", $this->event_dateError, $this->event_date, "disabled");
-        $this->generate_form_group("event_time", $this->event_timeError, $this->event_time, "disabled");
-        $this->generate_form_group("event_location", $this->event_locationError, $this->event_location, "disabled");
+        $this->generate_form_group("name", $this->nameError, $this->name, "disabled");
+        $this->generate_form_group("email", $this->emailError, $this->email, "disabled");
+        $this->generate_form_group("mobile", $this->mobileError, $this->mobile, "disabled");
         $this->generate_html_bottom(4);
     } // end function delete_record()
-    
+
     /*
-     * This method inserts one record into the table, 
-     * and redirects user to List, IF user input is valid, 
+     * This method inserts one record into the table,
+     * and redirects user to List, IF user input is valid,
      * OTHERWISE it redirects user back to Create form, with errors
      * - Input: user data from Create form
      * - Processing: INSERT (SQL)
      * - Output: None (This method does not generate HTML code,
      *   it only changes the content of the database)
-     * - Precondition: Public variables set (event_date, event_time, event_location)
+     * - Precondition: Public variables set (name, email, mobile)
      *   and database connection variables are set in datase.php.
-     *   Note that $id will NOT be set because the record 
+     *   Note that $id will NOT be set because the record
      *   will be a new record so the SQL database will "auto-number"
-     * - Postcondition: New record is added to the database table, 
-     *   and user is redirected to the List screen (if no errors), 
+     * - Postcondition: New record is added to the database table,
+     *   and user is redirected to the List screen (if no errors),
      *   or Create form (if errors)
      */
     function insert_db_record () {
@@ -71,21 +68,19 @@ class Event {
             // if valid data, insert record into table
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO $this->tableName (event_date,event_time,
-				event_location,event_description) values(?, ?, ?, ?)";
+            $sql = "INSERT INTO $this->tableName (name,email,mobile) values(?, ?, ?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($this->event_date,$this->event_time,
-				$this->event_location,$this->event_description));
+            $q->execute(array($this->name,$this->email,$this->mobile));
             Database::disconnect();
             header("Location: $this->tableName.php"); // go back to "list"
         }
         else {
             // if not valid data, go back to "create" form, with errors
             // Note: error fields are set in fieldsAllValid ()method
-            $this->create_record(); 
+            $this->create_record();
         }
     } // end function insert_db_record
-    
+
     private function select_db_record($id) {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -94,20 +89,20 @@ class Event {
         $q->execute(array($id));
         $data = $q->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
-        $this->event_date = $data['event_date'];
-        $this->event_time = $data['event_time'];
-        $this->event_location = $data['event_location'];
+        $this->name = $data['name'];
+        $this->email = $data['email'];
+        $this->mobile = $data['mobile'];
     } // function select_db_record()
-    
+
     function update_db_record ($id) {
         $this->id = $id;
         if ($this->fieldsAllValid()) {
             $this->noerrors = true;
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE $this->tableName  set event_date = ?, event_time = ?, event_location = ? WHERE id = ?";
+            $sql = "UPDATE $this->tableName  set name = ?, email = ?, mobile = ? WHERE id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($this->event_date,$this->event_time,$this->event_location,$this->id));
+            $q->execute(array($this->name,$this->email,$this->mobile,$this->id));
             Database::disconnect();
             header("Location: $this->tableName.php");
         }
@@ -115,8 +110,8 @@ class Event {
             $this->noerrors = false;
             $this->update_record($id);  // go back to "update" form
         }
-    } // end function update_db_record 
-    
+    } // end function update_db_record
+
     function delete_db_record($id) {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -126,23 +121,23 @@ class Event {
         Database::disconnect();
         header("Location: $this->tableName.php");
     } // end function delete_db_record()
-    
+
     private function generate_html_top ($fun, $id=null) {
         switch ($fun) {
             case 1: // create
-                $funWord = "Create"; $funNext = "insert_db_record"; 
+                $funWord = "Create"; $funNext = "insert_db_record";
                 break;
             case 2: // read
-                $funWord = "Read"; $funNext = "none"; 
+                $funWord = "Read"; $funNext = "none";
                 break;
             case 3: // update
-                $funWord = "Update"; $funNext = "update_db_record&id=" . $id; 
+                $funWord = "Update"; $funNext = "update_db_record&id=" . $id;
                 break;
             case 4: // delete
-                $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id; 
+                $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
                 break;
-            default: 
-                echo "Error: Invalid function: generate_html_top()"; 
+            default:
+                echo "Error: Invalid function: generate_html_top()";
                 exit();
                 break;
         }
@@ -156,7 +151,7 @@ class Event {
                 <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css' rel='stylesheet'>
                 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js'></script>
                 <style>label {width: 5em;}</style>
-                    "; 
+                    ";
         echo "
             </head>";
         echo "
@@ -166,14 +161,14 @@ class Event {
                         <p class='row'>
                             <h3>$funWord a $this->title</h3>
                         </p>
-                        <form class='form-horizontal' action='$this->tableName.php?fun=$funNext' method='post'>                        
+                        <form class='form-horizontal' action='$this->tableName.php?fun=$funNext' method='post'>
                     ";
     } // end function generate_html_top()
-    
+
     private function generate_html_bottom ($fun) {
         switch ($fun) {
             case 1: // create
-                $funButton = "<button type='submit' class='btn btn-success'>Create</button>"; 
+                $funButton = "<button type='submit' class='btn btn-success'>Create</button>";
                 break;
             case 2: // read
                 $funButton = "";
@@ -182,14 +177,14 @@ class Event {
                 $funButton = "<button type='submit' class='btn btn-warning'>Update</button>";
                 break;
             case 4: // delete
-                $funButton = "<button type='submit' class='btn btn-danger'>Delete</button>"; 
+                $funButton = "<button type='submit' class='btn btn-danger'>Delete</button>";
                 break;
-            default: 
-                echo "Error: Invalid function: generate_html_bottom()"; 
+            default:
+                echo "Error: Invalid function: generate_html_bottom()";
                 exit();
                 break;
         }
-        echo " 
+        echo "
                             <div class='form-actions'>
                                 $funButton
                                 <a class='btn btn-secondary' href='$this->tableName.php'>Back</a>
@@ -202,16 +197,16 @@ class Event {
         </html>
                     ";
     } // end function generate_html_bottom()
-    
-    private function generate_form_group ($label, $labelError, $val, $modifier="", $fieldType="text") {
+
+    private function generate_form_group ($label, $labelError, $val, $modifier="") {
         echo "<div class='form-group'";
         echo !empty($labelError) ? ' alert alert-danger ' : '';
         echo "'>";
         echo "<label class='control-label'>$label &nbsp;</label>";
         //echo "<div class='controls'>";
         echo "<input "
-            . "event_date='$label' "
-            . "type='$fieldType' "
+            . "name='$label' "
+            . "type='text' "
             . "$modifier "
             . "placeholder='$label' "
             . "value='";
@@ -225,28 +220,28 @@ class Event {
         //echo "</div>"; // end div: class='controls'
         echo "</div>"; // end div: class='form-group'
     } // end function generate_form_group()
-    
+
     private function fieldsAllValid () {
         $valid = true;
-        if (empty($this->event_date)) {
-            $this->event_dateError = 'Please enter event_date';
+        if (empty($this->name)) {
+            $this->nameError = 'Please enter Name';
             $valid = false;
         }
-        if (empty($this->event_time)) {
-            $this->event_timeError = 'Please enter event_time';
-            $valid = false;
-        } 
-        if (empty($this->event_location)) {
-            $this->event_locationError = 'Please enter event_location';
+        if (empty($this->email)) {
+            $this->emailError = 'Please enter Email Address';
             $valid = false;
         }
-        if (empty($this->event_description)) {
-            $this->event_descriptionError = 'Please enter event_description';
+        else if ( !filter_var($this->email,FILTER_VALIDATE_EMAIL) ) {
+            $this->emailError = 'Please enter a valid email address: me@mydomain.com';
+            $valid = false;
+        }
+        if (empty($this->mobile)) {
+            $this->mobileError = 'Please enter Mobile phone number';
             $valid = false;
         }
         return $valid;
-    } // end function fieldsAllValid() 
-    
+    } // end function fieldsAllValid()
+
     function list_records() {
         echo "<!DOCTYPE html>
         <html>
@@ -257,12 +252,16 @@ class Event {
                 <meta charset='UTF-8'>
                 <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css' rel='stylesheet'>
                 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js'></script>
-                    ";  
+                    ";
         echo "
             </head>
             <body>
-                <a href='https://github.com/cis355/PhpProject1' target='_blank'>Github</a><br />
                 <div class='container'>
+                    <a class='btn btn-success' href='https://github.com/jawsdaws/CIS355/tree/master/Prog02'>Github Repo</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/uml.png'>UML</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/read.png'>Read</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/update.png'>Update</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/delete.png'>Delete</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
                     </p>
@@ -273,9 +272,9 @@ class Event {
                         <table class='table table-striped table-bordered'>
                             <thead>
                                 <tr>
-                                    <th>event_date</th>
-                                    <th>event_time</th>
-                                    <th>event_location</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -285,9 +284,9 @@ class Event {
         $sql = "SELECT * FROM $this->tableName ORDER BY id DESC";
         foreach ($pdo->query($sql) as $row) {
             echo "<tr>";
-            echo "<td>". $row["event_date"] . "</td>";
-            echo "<td>". $row["event_time"] . "</td>";
-            echo "<td>". $row["event_location"] . "</td>";
+            echo "<td>". $row["name"] . "</td>";
+            echo "<td>". $row["email"] . "</td>";
+            echo "<td>". $row["mobile"] . "</td>";
             echo "<td width=250>";
             echo "<a class='btn btn-info' href='$this->tableName.php?fun=display_read_form&id=".$row["id"]."'>Read</a>";
             echo "&nbsp;";
@@ -297,7 +296,7 @@ class Event {
             echo "</td>";
             echo "</tr>";
         }
-        Database::disconnect();        
+        Database::disconnect();
         echo "
                             </tbody>
                         </table>
@@ -307,7 +306,7 @@ class Event {
             </body>
 
         </html>
-                    ";  
+                    ";
     } // end function list_records()
-    
+
 } // end class Customer
