@@ -5,10 +5,12 @@ class Customer {
     public $name;
     public $email;
     public $mobile;
+	public $password;
     private $noerrors = true;
     private $nameError = null;
     private $emailError = null;
     private $mobileError = null;
+	private $passwordError = null;
     private $title = "Customer";
     private $tableName = "customers";
 
@@ -17,6 +19,7 @@ class Customer {
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
         $this->generate_form_group("email", $this->emailError, $this->email);
         $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
+		$this->generate_form_group("password", $this->passwordError, $this->password);
         $this->generate_html_bottom (1);
     } // end function create_record()
 
@@ -69,7 +72,7 @@ class Customer {
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = "INSERT INTO $this->tableName (name,email,mobile) values(?, ?, ?)";
-            $q = $pdo->prepare($sql);
+			$q = $pdo->prepare($sql);
             $q->execute(array($this->name,$this->email,$this->mobile));
             Database::disconnect();
             header("Location: $this->tableName.php"); // go back to "list"
