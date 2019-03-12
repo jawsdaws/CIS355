@@ -1,7 +1,7 @@
 <?php
 class Database
 {
-    /* These are for the Vagrant */  
+    /* These are for the Vagrant */
     private static $_dbName = 'customers' ;
     private static $_dbHost = 'localhost' ;
     private static $_dbUsername = 'root';
@@ -35,8 +35,7 @@ class Database
         return self::$cont;
     }
 
-    public static function disconnect()
-    {
+    public static function disconnect() {
         self::$cont = null;
     }
 }
