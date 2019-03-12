@@ -16,10 +16,12 @@ class Customer {
     private $tableName = "customers";
 
 
-    /*
-    * This function displays the landing page that controls the session and
-    * allows for joining and login.
-    */
+    /**
+     * This function displays the landing page that controls the session and
+     * allows for joining and login.
+     * 
+     * @return none
+     */
     function landing()
     {
         $this->generate_html_top(5);
@@ -28,10 +30,12 @@ class Customer {
         $this->generate_html_bottom(5);
     }
 
-    /*
-    * This function displays the join page.
-    */
-    function join_form()
+    /**
+     * This function displays the join page.
+     * 
+     * @return none
+     */
+    function joinForm()
     {
         $this->generate_html_top(6);
         $this->generate_form_group("Email", $this->emailError, $this->email, "autofocus");
@@ -74,7 +78,7 @@ class Customer {
         $this->generate_html_bottom(4);
     } // end function delete_record()
 
-    /*
+    /**
      * This method inserts one record into the table,
      * and redirects user to List, IF user input is valid,
      * OTHERWISE it redirects user back to Create form, with errors
@@ -89,6 +93,8 @@ class Customer {
      * - Postcondition: New record is added to the database table,
      *   and user is redirected to the List screen (if no errors),
      *   or Create form (if errors)
+     * 
+     * @return none
      */
     function insert_db_record () {
         if ($this->fieldsAllValid ()) { // validate user input

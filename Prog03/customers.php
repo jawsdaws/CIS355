@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Customers
+ * php version 7.2.10
+ * 
+ */
 // include the class that handles database connections
 require "database.php";
 
@@ -10,42 +14,65 @@ $cust = new Customer();
 
 // set active record field values, if any
 // (field values not set for display_list and display_create_form)
-if(isset($_GET["id"]))          $id = $_GET["id"];
-if(isset($_POST["name"]))       $cust->name = htmlspecialchars($_POST["name"]);
-if(isset($_POST["email"]))      $cust->email = htmlspecialchars($_POST["email"]);
-if(isset($_POST["mobile"]))     $cust->mobile = htmlspecialchars($_POST["mobile"]);
-if(isset($_POST["password"]))   $cust->password = $_POST["password"];
+if (isset($_GET["id"])) {
+    $id = $_GET["id"];
+}         
+if (isset($_POST["name"])) {
+    $cust->name = htmlspecialchars($_POST["name"]);
+}
+if (isset($_POST["email"])) {
+    $cust->email = htmlspecialchars($_POST["email"]);
+}
+if (isset($_POST["mobile"])) {
+    $cust->mobile = htmlspecialchars($_POST["mobile"]);
+}
+if (isset($_POST["password"])) {
+    $cust->password = $_POST["password"];
+}
 
 
 // "fun" is short for "function" to be invoked
-if(isset($_GET["fun"])) $fun = $_GET["fun"];
-else $fun = "display_landing";
+if (isset($_GET["fun"])) {
+    $fun = $_GET["fun"];
+} else {
+    $fun = "display_landing";
+}
 
 // This switch uses the get data returned from the server to decide
 // which method to call from the customers class.
 switch ($fun) {
-    case "join_form":           $cust->join_form();
-        break;
-    case "display_landing":     $cust->landing();
-        break;
-    case "display_list":        $cust->list_records();
-        break;
-    case "display_create_form": $cust->create_record();
-        break;
-    case "display_read_form":   $cust->read_record($id);
-        break;
-    case "display_update_form": $cust->update_record($id);
-        break;
-    case "display_delete_form": $cust->delete_record($id);
-        break;
-    case "insert_db_record":    $cust->insert_db_record();
-        break;
-    case "update_db_record":    $cust->update_db_record($id);
-        break;
-    case "delete_db_record":    $cust->delete_db_record($id);
-        break;
-    default:
-        echo "Error: Invalid function call (customer.php)";
-        exit();
-        break;
+case "join_form":
+    $cust->join_form();
+    break;
+case "display_landing":
+    $cust->landing();
+    break;
+case "display_list":
+    $cust->list_records();
+    break;
+case "display_create_form":
+    $cust->create_record();
+    break;
+case "display_read_form":
+    $cust->read_record($id);
+    break;
+case "display_update_form":
+    $cust->update_record($id);
+    break;
+case "display_delete_form":
+    $cust->delete_record($id);
+    break;
+case "insert_db_record":
+    $cust->insert_db_record();
+    break;
+case "update_db_record":
+    $cust->update_db_record($id);
+    break;
+case "delete_db_record":
+    $cust->delete_db_record($id);
+    break;
+default:
+    echo "Error: Invalid function call (customer.php)";
+    exit();
+    break;
 }
