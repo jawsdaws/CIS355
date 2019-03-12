@@ -28,6 +28,16 @@ class Customer {
         $this->generate_html_bottom(5);
     }
 
+    /*
+    * This function displays the join page.
+    */
+    function join_form()
+    {
+        $this->generate_html_top(6);
+        $this->generate_form_group("Email", $this->emailError, $this->email, "autofocus");
+        $this->generate_form_group("Password", $this->passwordError, $this->password, "autofocus");
+        $this->generate_html_bottom(6);
+    }
     function create_record() { // display "create" form
         $this->generate_html_top (1);
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
@@ -88,9 +98,7 @@ class Customer {
             $this->password_hashed = MD5($this->password);
             $sql = "INSERT INTO $this->tableName (name,mobile,email,password_hash) values(?, ?, ?, ?)";
             $q = $pdo->prepare($sql);
-            echo $this->password_hashed;
             $q->execute(array($this->name, $this->mobile, $this->email, $this->password_hashed));
-            echo "FUCK";
             Database::disconnect();
             header("Location: $this->tableName.php"); // go back to "list"
         }
@@ -157,7 +165,10 @@ class Customer {
                 $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
                 break;
             case 5: // landing
-                $funWord = "Welcome"; $funNext = "none";
+                $funWord = "Welcome"; $funNext = "display_list";
+                break;
+            case 6: // landing
+                $funWord = "Join"; $funNext = "display_landing";
                 break;
             default:
                 echo "Error: Invalid function: generate_html_top()";
@@ -204,8 +215,12 @@ class Customer {
                 $funButton = "<button type='submit' class='btn btn-danger'>Delete</button>";
                 break;
             case 5: // landing
-                $funButton = "<button type='submit' class='btn btn-danger'>Login</button>";
-                $backButton ="<button type='submit' class='btn btn-danger'>Join</button>";
+                $funButton = "<button type='submit' class='btn btn-warning'>Login</button>";
+                $backButton ="<a class='btn btn-secondary' href='$this->tableName.php?fun=join_form'>Join</a>";
+                break;
+            case 6: // join
+                $funButton = "<button type='submit' class='btn btn-warning'>Join</button>";
+                $backButton = "";
                 break;
             default:
                 echo "Error: Invalid function: generate_html_bottom()";

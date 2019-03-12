@@ -22,21 +22,21 @@ class Database
     public static function connect()
     {
         // One connection through whole application
-        if ( null == self::$cont ) {
+        if ( null == self::$_cont ) {
             try
             {
-                self::$cont =  new PDO( "mysql:host=".self::$dbHost.";"."dbname=".self::$dbName, self::$dbUsername, self::$dbUserPassword);
+                self::$_cont =  new PDO( "mysql:host=".self::$_dbHost.";"."dbname=".self::$_dbName, self::$_dbUsername, self::$_dbUserPassword);
             }
             catch(PDOException $e)
             {
                 die($e->getMessage());
             }
         }
-        return self::$cont;
+        return self::$_cont;
     }
 
     public static function disconnect() {
-        self::$cont = null;
+        self::$_cont = null;
     }
 }
 ?>

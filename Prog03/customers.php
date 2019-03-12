@@ -24,6 +24,8 @@ else $fun = "display_landing";
 // This switch uses the get data returned from the server to decide
 // which method to call from the customers class.
 switch ($fun) {
+    case "join_form":           $cust->join_form();
+        break;
     case "display_landing":     $cust->landing();
         break;
     case "display_list":        $cust->list_records();
