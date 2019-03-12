@@ -9,10 +9,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "ubuntu/bionic64"
   config.vm.network "public_network"
-  config.vm.hostname = "Prog01CRUD" 
+  config.vm.hostname = "cis355" 
 
   config.vm.provider "virtualbox" do |v|
-    v.name = "Prog01-CRUD"
+    v.name = "cis355"
     v.customize ["modifyvm", :id, "--memory", "4096"]
 end
 

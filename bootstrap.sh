@@ -2,7 +2,7 @@
 
 # Use single quotes instead of double quotes to make it work with special-character passwords
 PASSWORD='12345678'
-PROJECTFOLDER='Prog01'
+PROJECTFOLDER='Prog03'
 
 # create project folder
 sudo mkdir "/var/www/html/${PROJECTFOLDER}"
@@ -14,6 +14,7 @@ sudo apt-get -y upgrade
 # install apache 2.5 and php 
 sudo apt-get install -y apache2
 sudo apt-get install -y php
+sudo apt-get install -y php-xdebug
 
 # install mysql and give password to installer
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $PASSWORD"
@@ -52,6 +53,12 @@ service apache2 restart
 # install git
 sudo apt-get -y install git
 
-# install Composer
-curl -s https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
+#xdebug
+#/etc/php/7.2/mods-available/xdebug.ini
+#[Xdebug]
+#zend_extension=xdebug.so
+#xdebug.remote_connect_back=0
+#xdebug.remote_host=192.168.1.168
+#xdebug.remote_enable=1
+#xdebug.remote_log="/tmp/xdebug.log"
+#xdebug.idekey="xdebug.atom"

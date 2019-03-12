@@ -73,9 +73,11 @@ class Customer {
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->password_hashed = MD5($this->password);
-            $sql = "INSERT INTO $this->tableName (name,email,mobile,password_hash) values(?, ?, ?, ?)";
+            $sql = "INSERT INTO $this->tableName (name,mobile,email,password_hash) values(?, ?, ?, ?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($this->name, $this->email, $this->mobile, $this->password_hashed));
+            echo $this->password_hashed;
+            $q->execute(array($this->name, $this->mobile, $this->email, $this->password_hashed));
+            echo "FUCK";
             Database::disconnect();
             header("Location: $this->tableName.php"); // go back to "list"
         }
@@ -228,6 +230,7 @@ class Customer {
 
     private function fieldsAllValid () {
         $valid = true;
+        echo $this->password;
         if (empty($this->name)) {
             $this->nameError = 'Please enter Name';
             $valid = false;
