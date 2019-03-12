@@ -15,6 +15,19 @@ class Customer {
     private $title = "Customer";
     private $tableName = "customers";
 
+
+    /*
+    * This function displays the landing page that controls the session and
+    * allows for joining and login.
+    */
+    function landing()
+    {
+        $this->generate_html_top(5);
+        $this->generate_form_group("Email", $this->emailError, $this->email, "autofocus");
+        $this->generate_form_group("Password", $this->passwordError, $this->password, "autofocus");
+        $this->generate_html_bottom(5);
+    }
+
     function create_record() { // display "create" form
         $this->generate_html_top (1);
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
@@ -143,6 +156,9 @@ class Customer {
             case 4: // delete
                 $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
                 break;
+            case 5: // landing
+                $funWord = "Welcome"; $funNext = "none";
+                break;
             default:
                 echo "Error: Invalid function: generate_html_top()";
                 exit();
@@ -173,6 +189,7 @@ class Customer {
     } // end function generate_html_top()
 
     private function generate_html_bottom ($fun) {
+        $backButton = "<a class='btn btn-secondary' href='$this->tableName.php'>Back</a>";
         switch ($fun) {
             case 1: // create
                 $funButton = "<button type='submit' class='btn btn-success'>Create</button>";
@@ -186,6 +203,10 @@ class Customer {
             case 4: // delete
                 $funButton = "<button type='submit' class='btn btn-danger'>Delete</button>";
                 break;
+            case 5: // landing
+                $funButton = "<button type='submit' class='btn btn-danger'>Login</button>";
+                $backButton ="<button type='submit' class='btn btn-danger'>Join</button>";
+                break;
             default:
                 echo "Error: Invalid function: generate_html_bottom()";
                 exit();
@@ -194,7 +215,7 @@ class Customer {
         echo "
                             <div class='form-actions'>
                                 $funButton
-                                <a class='btn btn-secondary' href='$this->tableName.php'>Back</a>
+                                $backButton
                             </div>
                         </form>
                     </div>

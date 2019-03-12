@@ -19,11 +19,13 @@ if(isset($_POST["password"]))   $cust->password = $_POST["password"];
 
 // "fun" is short for "function" to be invoked
 if(isset($_GET["fun"])) $fun = $_GET["fun"];
-else $fun = "display_list";
+else $fun = "display_landing";
 
 // This switch uses the get data returned from the server to decide
 // which method to call from the customers class.
 switch ($fun) {
+    case "display_landing":     $cust->landing();
+        break;
     case "display_list":        $cust->list_records();
         break;
     case "display_create_form": $cust->create_record();
