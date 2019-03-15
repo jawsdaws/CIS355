@@ -10,7 +10,7 @@ class Database
     private static $dbName = 'jpdaws355wi19' ;
     private static $dbHost = '10.8.30.49' ;
     private static $dbUsername = 'jpdaws355wi19';
-    private static $dbUserPassword = 'grainpaincheeselog'; */
+    private static $dbUserPassword = 'grainpaincheeselog';*/
 
     private static $_cont  = null;
 

@@ -2,21 +2,30 @@
 /**
  * Customers
  * php version 7.2.10
- * 
+ *
  */
+ session_start();
+ if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])){ // if "user" not set,
+ 	session_destroy();
+ 	header('Location: login.php');     // go to login page
+ 	exit();
+ }
+
 // include the class that handles database connections
 require "database.php";
 
 // include the class containing functions/methods for "customer" table
 // Note: this application uses "customer" table, not "cusotmers" table
 require "customers.class.php";
+
 $cust = new Customer();
+$cust->username = $_SESSION["email"];
 
 // set active record field values, if any
 // (field values not set for display_list and display_create_form)
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
-}         
+}
 if (isset($_POST["name"])) {
     $cust->name = htmlspecialchars($_POST["name"]);
 }
@@ -30,23 +39,18 @@ if (isset($_POST["password"])) {
     $cust->password = $_POST["password"];
 }
 
-
 // "fun" is short for "function" to be invoked
 if (isset($_GET["fun"])) {
     $fun = $_GET["fun"];
 } else {
-    $fun = "display_landing";
+    $fun = "display_list";
 }
 
 // This switch uses the get data returned from the server to decide
 // which method to call from the customers class.
 switch ($fun) {
-case "join_form":
-    $cust->join_form();
-    break;
-case "display_landing":
-    $cust->landing();
-    break;
+case "logout":
+    $cust->logout();
 case "display_list":
     $cust->list_records();
     break;

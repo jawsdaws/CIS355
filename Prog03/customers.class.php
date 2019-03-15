@@ -7,6 +7,7 @@ class Customer {
     public $mobile;
     public $password;
     public $password_hashed;
+    public $username = "";
     private $noerrors = true;
     private $nameError = null;
     private $emailError = null;
@@ -15,26 +16,15 @@ class Customer {
     private $title = "Customer";
     private $tableName = "customers";
 
-
-    /**
-     * This function displays the landing page that controls the session and
-     * allows for joining and login.
-     * 
-     * @return none
-     */
-    function landing()
-    {
-        $this->generate_html_top(5);
-        $this->generate_form_group("Email", $this->emailError, $this->email, "autofocus");
-        $this->generate_form_group("Password", $this->passwordError, $this->password, "autofocus");
-        $this->generate_html_bottom(5);
-    }
-
     /**
      * This function displays the join page.
-     * 
+     *
      * @return none
      */
+    function logout() {
+        header("Location: logout.php");
+    }
+    
     function joinForm()
     {
         $this->generate_html_top(6);
@@ -93,7 +83,7 @@ class Customer {
      * - Postcondition: New record is added to the database table,
      *   and user is redirected to the List screen (if no errors),
      *   or Create form (if errors)
-     * 
+     *
      * @return none
      */
     function insert_db_record () {
@@ -169,12 +159,6 @@ class Customer {
                 break;
             case 4: // delete
                 $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
-                break;
-            case 5: // landing
-                $funWord = "Welcome"; $funNext = "display_list";
-                break;
-            case 6: // landing
-                $funWord = "Join"; $funNext = "display_landing";
                 break;
             default:
                 echo "Error: Invalid function: generate_html_top()";
@@ -314,9 +298,11 @@ class Customer {
                     <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog02/delete.png'>Delete</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
+                        <h4>Logged in as " . "$this->username" . "</h4>
                     </p>
                     <p>
                         <a href='$this->tableName.php?fun=display_create_form' class='btn btn-success'>Create</a>
+                        <a href='$this->tableName.php?fun=logout' class='btn btn-success'>Logout</a>
                     </p>
                     <div class='row'>
                         <table class='table table-striped table-bordered'>

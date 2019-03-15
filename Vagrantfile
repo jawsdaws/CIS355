@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "ubuntu/bionic64"
-  config.vm.network "public_network"
+  config.vm.network "private_network", ip: "192.168.33.10"
   config.vm.hostname = "cis355" 
 
   config.vm.provider "virtualbox" do |v|
