@@ -17,21 +17,14 @@ class Customer {
     private $tableName = "customers";
 
     /**
-     * This function displays the join page.
+     * This function logs out the user directing them to logout.php.
      *
      * @return none
      */
     function logout() {
         header("Location: logout.php");
     }
-    
-    function joinForm()
-    {
-        $this->generate_html_top(6);
-        $this->generate_form_group("Email", $this->emailError, $this->email, "autofocus");
-        $this->generate_form_group("Password", $this->passwordError, $this->password, "autofocus");
-        $this->generate_html_bottom(6);
-    }
+
     function create_record() { // display "create" form
         $this->generate_html_top (1);
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
@@ -203,14 +196,6 @@ class Customer {
                 break;
             case 4: // delete
                 $funButton = "<button type='submit' class='btn btn-danger'>Delete</button>";
-                break;
-            case 5: // landing
-                $funButton = "<button type='submit' class='btn btn-warning'>Login</button>";
-                $backButton ="<a class='btn btn-secondary' href='$this->tableName.php?fun=join_form'>Join</a>";
-                break;
-            case 6: // join
-                $funButton = "<button type='submit' class='btn btn-warning'>Join</button>";
-                $backButton = "";
                 break;
             default:
                 echo "Error: Invalid function: generate_html_bottom()";

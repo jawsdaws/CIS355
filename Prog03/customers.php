@@ -4,12 +4,14 @@
  * php version 7.2.10
  *
  */
- session_start();
- if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])){ // if "user" not set,
- 	session_destroy();
- 	header('Location: login.php');     // go to login page
- 	exit();
- }
+session_start();
+
+//Controls the seesion.  If
+if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
+    session_destroy();
+    header('Location: login.php');     // go to login page
+    exit();
+}
 
 // include the class that handles database connections
 require "database.php";
@@ -19,7 +21,10 @@ require "database.php";
 require "customers.class.php";
 
 $cust = new Customer();
-$cust->username = $_SESSION["email"];
+
+if(isset($_SESSION["email"])) {
+    $cust->username = $_SESSION["email"];
+}
 
 // set active record field values, if any
 // (field values not set for display_list and display_create_form)
@@ -49,6 +54,8 @@ if (isset($_GET["fun"])) {
 // This switch uses the get data returned from the server to decide
 // which method to call from the customers class.
 switch ($fun) {
+case "join":
+    $cust->joinForm();
 case "logout":
     $cust->logout();
 case "display_list":

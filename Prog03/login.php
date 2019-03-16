@@ -10,7 +10,22 @@ session_start();
 // include the class that handles database connections
 require "database.php";
 
-if ( !empty($_POST)) { // if $_POST filled then process the form
+if (!empty($_POST["join"])) {
+	$username = $_POST['username']; // username is email address
+	$password = $_POST['password'];
+	$passwordhash = MD5($password);
+	$labelError = "";
+
+	// if valid data, insert record into table
+	$pdo = Database::connect();
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$sql = "INSERT INTO customers (email,password_hash) values(?, ?)";
+	$q = $pdo->prepare($sql);
+	$q->execute(array($username, $passwordhash));
+	Database::disconnect();
+}
+
+if (!empty($_POST)) { // if $_POST filled then process the form
 	// initialize $_POST variables
 	$username = $_POST['username']; // username is email address
 	$password = $_POST['password'];
@@ -83,7 +98,7 @@ if ( !empty($_POST)) { // if $_POST filled then process the form
 				<div class="form-actions">
 					<button type="submit" class="btn btn-success">Sign in</button>
 					&nbsp; &nbsp;
-					<a class="btn btn-primary" href="fr_per_create2.php">Join (New Volunteer)</a>
+					<button type="submit" class="btn btn-success" name="join" value="true">Join</a>
 				</div>
 
 				<div>
