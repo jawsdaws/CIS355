@@ -2,6 +2,7 @@
 /* ---------------------------------------------------------------------------
  * filename    : login.php
  * author      : George Corser, gcorser@gmail.com
+ * edited      : James Daws, jpdaws@svsu.edu
  * description : This program logs the user in by setting $_SESSION variables
  * ---------------------------------------------------------------------------
  */
@@ -10,6 +11,11 @@ session_start();
 // include the class that handles database connections
 require "database.php";
 
+/**
+ * This if statement is only executed when the join post variable is set
+ * If the email is of valid form, add a record with defalut values to the db and
+ * then contine to login.
+ */
 if (!empty($_POST["join"])) {
 	$username = $_POST['username']; // username is email address
 	$password = $_POST['password'];
