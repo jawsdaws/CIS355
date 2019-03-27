@@ -58,7 +58,7 @@ if (!empty($_POST)) { // if $_POST filled then process the form
 		$_SESSION['mobile'] = $data['mobile'];
 		$sessionid = $data['id'];
 		Database::disconnect();
-		header("Location: customers.php ");
+		header("Location: customers.html ");
 		// javascript below is necessary for system to work on github
 		// echo "<script type='text/javascript'> document.location = 'fr_assignments.php'; </script>";
 		exit();
