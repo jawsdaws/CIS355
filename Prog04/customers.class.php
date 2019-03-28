@@ -217,8 +217,16 @@ class Customer {
                     ";
     } // end function generate_html_bottom()
 
+    /**
+     * This function adds the 3 upload buttons to the update screen.  Each button has to be different.
+     *   
+     */
     private function generate_upload_button() {
-        echo "<a class='btn btn-success' href='upload01.html'>Upload Files</a>";
+        echo "<a class='btn btn-success' href='upload01.html'>Upload 1 - Simple</a>";
+        echo "<br> <br>";
+        echo "<a class='btn btn-success' href='upload02.html'>Upload 2</a>";
+        echo "<br> <br>";
+        echo "<a class='btn btn-success' href='upload03.html'>Upload 3</a>";
         echo "<br> <br>";
     }
 
