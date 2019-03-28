@@ -14,7 +14,6 @@ if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
 require 'database.php';
 
 // set PHP variables from data in HTML form
-$fileDescription = $_POST['Description'];
 $fileName       = $_FILES['Filename']['name'];
 $tempFileName   = $_FILES['Filename']['tmp_name'];
 $fileSize       = $_FILES['Filename']['size'];
@@ -77,7 +76,8 @@ $pdo = Database::connect();
 // insert file info and content into table
 $sql = "UPDATE customers
         SET filename = '$fileName', filesize = '$fileSize',
-            filetype = '$fileType', filecontents = '$content'
+            filetype = '$fileType', filecontents = '$content',
+            description = '$fileFullPath'
         WHERE id =$id";
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $q = $pdo->prepare($sql);
@@ -85,6 +85,7 @@ $q->bindValue("filename", $fileName);
 $q->bindValue("filesize", $fileSize);
 $q->bindValue("filetype", $fileType);
 $q->bindValue("filecontests", $content);
+$q->bindValue("description", $fileFullPath);
 $q->execute();
 
 

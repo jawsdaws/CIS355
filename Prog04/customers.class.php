@@ -73,9 +73,6 @@ class Customer {
                     <p>File</p>
                     <input type="file" required
                         name="Filename">
-                    <p>Description</p>
-                    <textarea rows="10" cols="35"
-                        name="Description"></textarea>
                     <br/>
                     <input TYPE="submit" name="upload" value="Submit"/>
                 </form>
@@ -394,7 +391,8 @@ class Customer {
             echo "<br>";
             echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_upload_form&id=".$row["id"]."'>Upload</a>";
             echo "</td>";
-            echo "<td><img width=100 src='data:image/jpeg;base64," . base64_encode( $row['filecontents'] ) . "' /> </td>";
+            echo "<td><img width=100 src='data:image/jpeg;base64," . base64_encode( $row['filecontents'] ) . "' />";
+            echo "<br><a href='" . $row['description'] . "' >" . $row['description'] . "</a> </td>";
             echo "</tr>";
         }
         Database::disconnect();
