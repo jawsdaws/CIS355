@@ -8,6 +8,8 @@ class Customer {
     public $password;
     public $password_hashed;
     public $username = "";
+    public $upload = "";
+    private $uploadError = null;
     private $noerrors = true;
     private $nameError = null;
     private $emailError = null;
@@ -59,6 +61,58 @@ class Customer {
         $this->generate_form_group("email", $this->emailError, $this->email, "disabled");
         $this->generate_form_group("mobile", $this->mobileError, $this->mobile, "disabled");
         $this->generate_html_bottom(4);
+    } // end function delete_record()
+
+    function display_upload_form($id) { // display "upload" form
+        echo '<!DOCTYPE html>
+        <html>
+            <body>
+                <form method="post" action="upload03.php?id=' . $id . '"
+                      onsubmit="return Validate(this);"
+                      enctype="multipart/form-data">
+                    <p>File</p>
+                    <input type="file" required
+                        name="Filename">
+                    <p>Description</p>
+                    <textarea rows="10" cols="35"
+                        name="Description"></textarea>
+                    <br/>
+                    <input TYPE="submit" name="upload" value="Submit"/>
+                </form>
+
+                <script>
+                    var _validFileExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+                    function Validate(oForm) {
+                        var arrInputs = oForm.getElementsByTagName("input");
+                        for (var i = 0; i < arrInputs.length; i++) {
+                            var oInput = arrInputs[i];
+                            if (oInput.type == "file") {
+                                var sFileName = oInput.value;
+                                if (sFileName.length > 0) {
+                                    var blnValid = false;
+                                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                                        var sCurExtension = _validFileExtensions[j];
+                                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                            blnValid = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!blnValid) {
+                                        alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        return true;
+                    }
+                </script>
+
+            </body>
+
+        </html>';
     } // end function delete_record()
 
     /**
@@ -139,19 +193,38 @@ class Customer {
         header("Location: $this->tableName.php");
     } // end function delete_db_record()
 
+    function upload_a_file($id) {
+        header("Location:upload03.php");
+        $fileName = $_POST['Filename'];
+        $pdo = Database::connect();
+        $sql = "INSERT INTO customers (filename, filesize, filetype, filecontents) "
+            . "VALUES ('$fileName', '$fileSize', '$fileType', '$content')";
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $q = $pdo->prepare($sql);
+        $q->execute(array());
+
+        // disconnect
+        Database::disconnect();
+        header("Location: customers.php");
+    }
+
     private function generate_html_top ($fun, $id=null) {
         switch ($fun) {
             case 1: // create
-                $funWord = "Create"; $funNext = "insert_db_record";
+                $funWord = "Create a $this->title";
+                $funNext = "insert_db_record";
                 break;
             case 2: // read
-                $funWord = "Read"; $funNext = "none";
+                $funWord = "Read a $this->title";
+                $funNext = "none";
                 break;
             case 3: // update
-                $funWord = "Update"; $funNext = "update_db_record&id=" . $id;
+                $funWord = "Update a $this->title";
+                $funNext = "update_db_record&id=" . $id;
                 break;
             case 4: // delete
-                $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
+                $funWord = "Delete a $this->title";
+                $funNext = "delete_db_record&id=" . $id;
                 break;
             default:
                 echo "Error: Invalid function: generate_html_top()";
@@ -161,7 +234,7 @@ class Customer {
         echo "<!DOCTYPE html>
         <html>
             <head>
-                <title>$funWord a $this->title</title>
+                <title>$funWord</title>
                     ";
         echo "
                 <meta charset='UTF-8'>
@@ -176,7 +249,7 @@ class Customer {
                 <div class='container'>
                     <div class='span10 offset1'>
                         <p class='row'>
-                            <h3>$funWord a $this->title</h3>
+                            <h3>$funWord</h3>
                         </p>
                         <form class='form-horizontal' action='$this->tableName.php?fun=$funNext' method='post'>
                     ";
@@ -291,12 +364,6 @@ class Customer {
                         <a href='$this->tableName.php?fun=display_create_form' class='btn btn-success'>Create</a>
                         <a href='$this->tableName.php?fun=logout' class='btn btn-success'>Logout</a>
                     </p>
-                    <a class='btn btn-success' href='upload01.html'>Upload 1 - Simple</a>
-                    <a class='btn btn-success' href='upload02.html'>Upload 2 - Simple + DB</a>
-                    <a class='btn btn-success' href='upload03.html'>Upload 3 - Blob</a>
-                    <br> <br>
-                    <a class='btn btn-success' href='" . substr(get_current_url(), 0, -14) . "/uploads'>File List</a>
-
                     <div class='row'>
                         <table class='table table-striped table-bordered'>
                             <thead>
@@ -322,6 +389,9 @@ class Customer {
             echo "<a class='btn btn-warning' href='$this->tableName.php?fun=display_update_form&id=".$row["id"]."'>Update</a>";
             echo "&nbsp;";
             echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_delete_form&id=".$row["id"]."'>Delete</a>";
+            echo "&nbsp;";
+            echo "<br>";
+            echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_upload_form&id=".$row["id"]."'>Upload</a>";
             echo "</td>";
             echo "</tr>";
         }

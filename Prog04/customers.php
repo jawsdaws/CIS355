@@ -57,8 +57,13 @@ if (isset($_GET["fun"])) {
 switch ($fun) {
 case "join":
     $cust->joinForm();
+    break;
 case "logout":
     $cust->logout();
+    break;
+case "display_upload_form":
+    $cust->display_upload_form($id);
+    break;
 case "display_list":
     $cust->list_records();
     break;
@@ -73,6 +78,9 @@ case "display_update_form":
     break;
 case "display_delete_form":
     $cust->delete_record($id);
+    break;
+case "upload_a_file":
+    $cust->upload_a_file($id);
     break;
 case "insert_db_record":
     $cust->insert_db_record();

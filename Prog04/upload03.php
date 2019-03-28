@@ -19,6 +19,7 @@ $fileName       = $_FILES['Filename']['name'];
 $tempFileName   = $_FILES['Filename']['tmp_name'];
 $fileSize       = $_FILES['Filename']['size'];
 $fileType       = $_FILES['Filename']['type'];
+$id             = $_GET['id'];
 
 // abort if no filename
 if (!$fileName) {
@@ -62,30 +63,13 @@ if(!get_magic_quotes_gpc()) { $fileName = addslashes($fileName); }
 $pdo = Database::connect();
 
 // insert file info and content into table
-$sql = "INSERT INTO customers (filename, filesize, filetype, filecontents) "
-    . "VALUES ('$fileName', '$fileSize', '$fileType', '$content')";
+$sql = "UPDATE customers
+        SET filename = ?, filesize = ?, filetype = ?, filecontents = ?
+        WHERE id =$id";
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $q = $pdo->prepare($sql);
-$q->execute(array());
-
-// list all uploads in database
-// ORDER BY BINARY filename ASC (sorts case-sensitive, like Linux)
-echo '<br><br>All files in database...<br><br>';
-$sql = 'SELECT * FROM customers '
-    . 'ORDER BY BINARY filename ASC;';
-
-foreach ($pdo->query($sql) as $row) {
-    $id = $row['id'];
-    $sql = "SELECT * FROM customers where id=$id";
-    if(!is_null($row['filecontents'])) {
-        echo $row['id'] . ' - ' . $row['filename'] . '<br>'
-            . '<img width=100 src="data:image/jpeg;base64,'
-            . base64_encode( $row['filecontents'] ).'"/>'
-            . '<br><br>';
-    }
-
-}
-echo '<br><br>';
+$q->execute(array($fileName,$fileSize,$fileType,$content));
 
 // disconnect
 Database::disconnect();
+header("Location: customers.php");
