@@ -49,6 +49,7 @@ class Customer {
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus onfocus='this.select()'");
         $this->generate_form_group("email", $this->emailError, $this->email);
         $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
+        $this->generate_upload_button();
         $this->generate_html_bottom(3);
     } // end function update_record()
 
@@ -215,6 +216,11 @@ class Customer {
         </html>
                     ";
     } // end function generate_html_bottom()
+
+    private function generate_upload_button() {
+        echo "<a class='btn btn-success' href='upload01.html'>Upload Files</a>";
+        echo "<br> <br>";
+    }
 
     private function generate_form_group ($label, $labelError, $val, $modifier="") {
         echo "<div class='form-group'";
