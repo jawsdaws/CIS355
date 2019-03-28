@@ -372,6 +372,7 @@ class Customer {
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Action</th>
+                                    <th>Thumb</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -393,6 +394,7 @@ class Customer {
             echo "<br>";
             echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_upload_form&id=".$row["id"]."'>Upload</a>";
             echo "</td>";
+            echo "<td><img width=100 src='data:image/jpeg;base64," . base64_encode( $row['filecontents'] ) . "' /> </td>";
             echo "</tr>";
         }
         Database::disconnect();
@@ -409,3 +411,4 @@ class Customer {
     } // end function list_records()
 
 } // end class Customer
+?>
