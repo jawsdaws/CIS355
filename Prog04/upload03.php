@@ -1,12 +1,20 @@
 <?php
 
-// see HTML form (upload03.html) for overview of this program
+// see HTML form (customers.html) for overview of this program
 
+session_start();
+
+//Controls the seesion.  If
+if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
+    session_destroy();
+    header('Location: login.php');     // go to login page
+    exit();
+}
 // include code for database access
-require '../database/database.php';
+require 'database.php';
 
-// set PHP variables from data in HTML form 
-$fileDescription = $_POST['Description']; 
+// set PHP variables from data in HTML form
+$fileDescription = $_POST['Description'];
 $fileName       = $_FILES['Filename']['name'];
 $tempFileName   = $_FILES['Filename']['tmp_name'];
 $fileSize       = $_FILES['Filename']['size'];
@@ -26,7 +34,7 @@ $info = getimagesize($_FILES['Filename']['tmp_name']);
 if ($info === FALSE) {
    die("Error Unable to determine <i>image</i> type of uploaded file");
 }
-if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) 
+if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG)
         && ($info[2] !== IMAGETYPE_PNG)) {
    die("Not a gif/jpeg/png");
 }
@@ -35,9 +43,9 @@ if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG)
 if($fileSize > 2000000) { echo "Error: file exceeds 2MB."; exit(); }
 
 // fix slashes in $fileType variable, if necessary
-$fileType=(get_magic_quotes_gpc()==0 ? mysql_real_escape_string(
-$_FILES['Filename']['type']) : mysql_real_escape_string(
-stripslashes ($_FILES['Filename'])));
+//$fileType=(get_magic_quotes_gpc()==0 ? mysqli_real_escape_string(
+//$_FILES['Filename']['type']) : mysqli_real_escape_string(
+//stripslashes ($_FILES['Filename'])));
 
 // put the content of the file into a variable, $content
 $fp      = fopen($tempFileName, 'r');
@@ -54,27 +62,30 @@ if(!get_magic_quotes_gpc()) { $fileName = addslashes($fileName); }
 $pdo = Database::connect();
 
 // insert file info and content into table
-$sql = "INSERT INTO upload03 (filename, filesize, filetype, content) "
+$sql = "INSERT INTO customers (filename, filesize, filetype, filecontents) "
     . "VALUES ('$fileName', '$fileSize', '$fileType', '$content')";
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $q = $pdo->prepare($sql);
 $q->execute(array());
 
-// list all uploads in database 
+// list all uploads in database
 // ORDER BY BINARY filename ASC (sorts case-sensitive, like Linux)
 echo '<br><br>All files in database...<br><br>';
-$sql = 'SELECT * FROM upload03 ' 
+$sql = 'SELECT * FROM customers '
     . 'ORDER BY BINARY filename ASC;';
 
 foreach ($pdo->query($sql) as $row) {
     $id = $row['id'];
-    $sql = "SELECT * FROM upload03 where id=$id"; 
-    echo $row['id'] . ' - ' . $row['filename'] . '<br>'
-        . '<img width=100 src="data:image/jpeg;base64,'
-        . base64_encode( $row['content'] ).'"/>'
-        . '<br><br>';
+    $sql = "SELECT * FROM customers where id=$id";
+    if(!is_null($row['filecontents'])) {
+        echo $row['id'] . ' - ' . $row['filename'] . '<br>'
+            . '<img width=100 src="data:image/jpeg;base64,'
+            . base64_encode( $row['filecontents'] ).'"/>'
+            . '<br><br>';
+    }
+
 }
 echo '<br><br>';
 
 // disconnect
-Database::disconnect(); 
+Database::disconnect();

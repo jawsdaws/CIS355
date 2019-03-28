@@ -15,6 +15,7 @@ if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
 
 // include the class that handles database connections
 require "database.php";
+require_once ('functions01.php');
 
 // include the class containing functions/methods for "customer" table
 // Note: this application uses "customer" table, not "cusotmers" table

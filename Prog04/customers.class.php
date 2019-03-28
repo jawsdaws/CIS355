@@ -49,7 +49,6 @@ class Customer {
         $this->generate_form_group("name", $this->nameError, $this->name, "autofocus onfocus='this.select()'");
         $this->generate_form_group("email", $this->emailError, $this->email);
         $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
-        $this->generate_upload_button();
         $this->generate_html_bottom(3);
     } // end function update_record()
 
@@ -217,19 +216,6 @@ class Customer {
                     ";
     } // end function generate_html_bottom()
 
-    /**
-     * This function adds the 3 upload buttons to the update screen.  Each button has to be different.
-     *   
-     */
-    private function generate_upload_button() {
-        echo "<a class='btn btn-success' href='upload01.html'>Upload 1 - Simple</a>";
-        echo "<br> <br>";
-        echo "<a class='btn btn-success' href='upload02.html'>Upload 2</a>";
-        echo "<br> <br>";
-        echo "<a class='btn btn-success' href='upload03.html'>Upload 3</a>";
-        echo "<br> <br>";
-    }
-
     private function generate_form_group ($label, $labelError, $val, $modifier="") {
         echo "<div class='form-group'";
         echo !empty($labelError) ? ' alert alert-danger ' : '';
@@ -305,6 +291,12 @@ class Customer {
                         <a href='$this->tableName.php?fun=display_create_form' class='btn btn-success'>Create</a>
                         <a href='$this->tableName.php?fun=logout' class='btn btn-success'>Logout</a>
                     </p>
+                    <a class='btn btn-success' href='upload01.html'>Upload 1 - Simple</a>
+                    <a class='btn btn-success' href='upload02.html'>Upload 2 - Simple + DB</a>
+                    <a class='btn btn-success' href='upload03.html'>Upload 3 - Blob</a>
+                    <br> <br>
+                    <a class='btn btn-success' href='" . substr(get_current_url(), 0, -14) . "/uploads'>File List</a>
+
                     <div class='row'>
                         <table class='table table-striped table-bordered'>
                             <thead>

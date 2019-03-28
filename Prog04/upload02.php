@@ -2,6 +2,14 @@
 
 // see HTML form (customers.html) for overview of this program
 
+session_start();
+
+//Controls the seesion.  If
+if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
+    session_destroy();
+    header('Location: login.php');     // go to login page
+    exit();
+}
 // include code for database access
 require 'database.php';
 
@@ -76,7 +84,9 @@ $sql = 'SELECT * FROM customers '
     . 'ORDER BY BINARY filename ASC;';
 $i = 0;
 foreach ($pdo->query($sql) as $row) {
-    echo ' ... [' . $i++ . '] --- ' . $row['filename'] . '<br>';
+    if($row['filesize'] <> 0 && is_null($row['filecontents'])) {
+        echo ' ... [' . $i++ . '] --- ' . $row['filename'] . '<br>';
+    }
 }
 echo '<br><br>';
 
