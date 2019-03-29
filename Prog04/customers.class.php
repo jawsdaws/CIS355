@@ -353,7 +353,7 @@ class Customer {
                     <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog03/delete.png'>Delete</a>
                     <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog03/login.png'>Login</a>
                     <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog03/logout.png'>Logout</a>
-                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog03/upload.png'>Logout</a>
+                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog03/upload.png'>Upload</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
                         <h4>Logged in as " . "$this->username" . "</h4>
