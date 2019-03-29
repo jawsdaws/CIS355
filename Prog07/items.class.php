@@ -303,14 +303,25 @@ class Items {
                             <tbody>
                     ";
         $pdo = Database::connect();
-        $sql = "SELECT * FROM lrp_items NATURAL JOIN lrp_stores NATURAL JOIN lrp_companies";
+        $sql = "UPDATE lrp_items
+                SET item_ppq = item_price/item_quantity";
+        $q = $pdo->prepare($sql);
+        $q->execute();
+
+        $sql = "SELECT item_name, store_city, item_price
+                FROM lrp_items
+                NATURAL JOIN lrp_stores
+                NATURAL JOIN lrp_companies
+                GROUP BY item_name, store_city, item_price
+                ORDER BY item_name ASC";
+        setlocale(LC_MONETARY, 'en_US');
         $tmp = $pdo->query($sql);
         foreach ($pdo->query($sql) as $row) {
             echo "<tr>";
             echo "<td>". $row["item_name"] . "</td>";
-            echo "<td>". $row["item_price"] . "</td>";
-            echo "<td>". $row["company_name"] . "</td>";
-            $ppq = number_format((float)$row["item_price"] / $row["item_quantity"], 3, '.', '');
+            echo "<td>". money_format('$%i', $row["item_price"]) . "</td>";
+            echo "<td>". $row["company_name"] . " - " . $row["store_city"] . "</td>";
+            $ppq = number_format((float)$row["item_ppq"], 3, '.', '');
             echo "<td>\$$ppq per " . $row['item_quantity_unit'] . "</td>";
             echo "<td width=250>";
             echo "<a class='btn btn-info' href='$this->tableName.php?fun=display_read_form&id=".$row["item_id"]."'>Read</a>";
