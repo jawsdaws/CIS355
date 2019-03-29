@@ -1,16 +1,16 @@
 <?php
 class Database
 {
-    /* These are for the Vagrant 
-    private static $_dbName = 'customers' ;
+    /* These are for the Vagrant */
+    private static $_dbName = 'lrp' ;
     private static $_dbHost = 'localhost' ;
     private static $_dbUsername = 'root';
-    private static $_dbUserPassword = '12345678';*/
-    /* These are for Csis server*/
+    private static $_dbUserPassword = '12345678';
+    /* These are for Csis server
     private static $_dbName = 'jpdaws355wi19' ;
     private static $_dbHost = '10.8.30.49' ;
     private static $_dbUsername = 'jpdaws355wi19';
-    private static $_dbUserPassword = 'grainpaincheeselog';
+    private static $_dbUserPassword = 'grainpaincheeselog';*/
 
     private static $_cont  = null;
 

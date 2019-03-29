@@ -29,7 +29,7 @@ if (!empty($_POST["join"])) {
 	// if valid data, insert record into table
 	$pdo = Database::connect();
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "INSERT INTO customers (email,password_hash) values(?, ?)";
+	$sql = "INSERT INTO lrp_users (email,password_hash) values(?, ?)";
 	$q = $pdo->prepare($sql);
 	$q->execute(array($username, $passwordhash));
 	Database::disconnect();
@@ -45,7 +45,7 @@ if (!empty($_POST)) { // if $_POST filled then process the form
 	// verify the username/password
 	$pdo = Database::connect();
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "SELECT * FROM customers WHERE email = ? AND password_hash = ? LIMIT 1";
+	$sql = "SELECT * FROM lrp_users WHERE email = ? AND password_hash = ? LIMIT 1";
 	$q = $pdo->prepare($sql);
 	$q->execute(array($username,$passwordhash));
 	$data = $q->fetch(PDO::FETCH_ASSOC);
@@ -58,7 +58,7 @@ if (!empty($_POST)) { // if $_POST filled then process the form
 		$_SESSION['mobile'] = $data['mobile'];
 		$sessionid = $data['id'];
 		Database::disconnect();
-		header("Location: customers.html ");
+		header("Location: items.php");
 		// javascript below is necessary for system to work on github
 		// echo "<script type='text/javascript'> document.location = 'fr_assignments.php'; </script>";
 		exit();

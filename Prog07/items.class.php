@@ -1,6 +1,6 @@
 <?php
 
-class Customer {
+class Items {
     public $id;
     public $name;
     public $email;
@@ -13,8 +13,8 @@ class Customer {
     private $emailError = null;
     private $mobileError = null;
     private $passwordError = null;
-    private $title = "Customer";
-    private $tableName = "customers";
+    private $title = "Lowest Regular Price";
+    private $tableName = "lrp_user";
 
     /**
      * This function logs out the user directing them to logout.php.
@@ -22,7 +22,7 @@ class Customer {
      * @return none
      */
     function logout() {
-        header("Location: logout.html");
+        header("Location: logout.php");
     }
 
     function create_record() { // display "create" form
@@ -294,26 +294,30 @@ class Customer {
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
+                                    <th>Price</th>
+                                    <th>Store</th>
+                                    <th>Price/Quantity</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                     ";
         $pdo = Database::connect();
-        $sql = "SELECT * FROM $this->tableName ORDER BY id DESC";
+        $sql = "SELECT * FROM lrp_items NATURAL JOIN lrp_stores NATURAL JOIN lrp_companies";
+        $tmp = $pdo->query($sql);
         foreach ($pdo->query($sql) as $row) {
             echo "<tr>";
-            echo "<td>". $row["name"] . "</td>";
-            echo "<td>". $row["email"] . "</td>";
-            echo "<td>". $row["mobile"] . "</td>";
+            echo "<td>". $row["item_name"] . "</td>";
+            echo "<td>". $row["item_price"] . "</td>";
+            echo "<td>". $row["company_name"] . "</td>";
+            $ppq = number_format((float)$row["item_price"] / $row["item_quantity"], 3, '.', '');
+            echo "<td>\$$ppq per " . $row['item_quantity_unit'] . "</td>";
             echo "<td width=250>";
-            echo "<a class='btn btn-info' href='$this->tableName.php?fun=display_read_form&id=".$row["id"]."'>Read</a>";
+            echo "<a class='btn btn-info' href='$this->tableName.php?fun=display_read_form&id=".$row["item_id"]."'>Read</a>";
             echo "&nbsp;";
-            echo "<a class='btn btn-warning' href='$this->tableName.php?fun=display_update_form&id=".$row["id"]."'>Update</a>";
+            echo "<a class='btn btn-warning' href='$this->tableName.php?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
             echo "&nbsp;";
-            echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_delete_form&id=".$row["id"]."'>Delete</a>";
+            echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";
             echo "</td>";
             echo "</tr>";
         }
