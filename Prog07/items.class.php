@@ -49,12 +49,14 @@ class Items {
         $this->generate_html_bottom(3);
     } // end function update_record()
 
-    function delete_record($id) { // display "delete" form
-        $this->select_db_record($id);
-        $this->generate_html_top(4, $id);
-        $this->generate_form_group("name", $this->nameError, $this->name, "disabled");
-        $this->generate_form_group("email", $this->emailError, $this->email, "disabled");
-        $this->generate_form_group("mobile", $this->mobileError, $this->mobile, "disabled");
+    function delete_record($item_id) { // display "delete" form
+        $this->select_db_record($item_id);
+        $this->generate_html_top(4, $item_id);
+        $this->generate_form_group("Item", $this->nameError, $this->item_name, "disabled");
+        $this->generate_form_group("Price", $this->priceError, $this->item_price, "disabled");
+        $this->generate_form_group("Quantity", $this->quantityError, $this->item_quantity, "disabled");
+        $this->generate_form_group("Quantity Unit", $this->quantityUnitError, $this->item_quantity_unit, "disabled");
+        $this->generate_drop_down("Store");
         $this->generate_html_bottom(4);
     } // end function delete_record()
 
@@ -131,7 +133,7 @@ class Items {
     function delete_db_record($id) {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "DELETE FROM $this->tableName WHERE id = ?";
+        $sql = "DELETE FROM $this->tableName WHERE item_id = ?";
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
         Database::disconnect();
