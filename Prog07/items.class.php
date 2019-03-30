@@ -35,16 +35,17 @@ class Items {
         $this->generate_form_group("Quantity", $this->quantityError, $this->item_quantity);
         $this->generate_form_group("Quantity Unit", $this->quantityUnitError, $this->item_quantity_unit);
         $this->generate_drop_down("Store");
-
         $this->generate_html_bottom (1);
     } // end function create_record()
 
-    function update_record($id) { // display "update" form
-        if($this->noerrors) $this->select_db_record($id);
-        $this->generate_html_top(3, $id);
-        $this->generate_form_group("name", $this->nameError, $this->name, "autofocus onfocus='this.select()'");
-        $this->generate_form_group("email", $this->emailError, $this->email);
-        $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
+    function update_record($item_id) { // display "update" form
+        if($this->noerrors) $this->select_db_record($item_id);
+        $this->generate_html_top(3, $item_id);
+        $this->generate_form_group("Item", $this->nameError, $this->item_name, "autofocus");
+        $this->generate_form_group("Price", $this->priceError, $this->item_price);
+        $this->generate_form_group("Quantity", $this->quantityError, $this->item_quantity);
+        $this->generate_form_group("Quantity Unit", $this->quantityUnitError, $this->item_quantity_unit);
+        $this->generate_drop_down("Store");
         $this->generate_html_bottom(3);
     } // end function update_record()
 
@@ -102,20 +103,22 @@ class Items {
         $q->execute(array($id));
         $data = $q->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
-        $this->name = $data['name'];
-        $this->email = $data['email'];
-        $this->mobile = $data['mobile'];
+        $this->item_name = $data['item_name'];
+        $this->item_price= $data['item_price'];
+        $this->item_quantity = $data['item_quantity'];
+        $this->item_quantity_unit = $data['item_quantity_unit'];
+        $this->store_id = $data['store_id'];
     } // function select_db_record()
 
     function update_db_record ($id) {
-        $this->id = $id;
+        $this->item_id = $id;
         if ($this->fieldsAllValid()) {
             $this->noerrors = true;
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "UPDATE $this->tableName  set name = ?, email = ?, mobile = ? WHERE id = ?";
+            $sql = "UPDATE $this->tableName  set item_name = ?, item_price = ?, item_quantity = ?, item_quantity_unit = ?, store_id = ? WHERE item_id = ?";
             $q = $pdo->prepare($sql);
-            $q->execute(array($this->name,$this->email,$this->mobile,$this->id));
+            $q->execute(array($this->item_name,$this->item_price,$this->item_quantity,$this->item_quantity_unit,$this->store_id,$this->item_id));
             Database::disconnect();
             header("Location: $this->className.php");
         }
@@ -254,18 +257,18 @@ class Items {
             $this->nameError = 'Please enter Name';
             $valid = false;
         }
-        /*if (empty($this->email)) {
-            $this->emailError = 'Please enter Email Address';
+        if (empty($this->item_price)) {
+            $this->priceError = 'Please enter the price';
             $valid = false;
         }
-        else if ( !filter_var($this->email,FILTER_VALIDATE_EMAIL) ) {
-            $this->emailError = 'Please enter a valid email address: me@mydomain.com';
+        if (empty($this->item_quantity)) {
+            $this->quantityError = 'Please enter a valid quantity.';
             $valid = false;
         }
-        if (empty($this->mobile)) {
-            $this->mobileError = 'Please enter Mobile phone number';
+        if (empty($this->item_quantity_unit)) {
+            $this->quantityUnitError = 'Please enter a valid quantity unit.';
             $valid = false;
-        }*/
+        }
         return $valid;
     } // end function fieldsAllValid()
 
