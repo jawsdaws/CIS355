@@ -30,14 +30,20 @@ if(isset($_SESSION["email"])) {
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 }
-if (isset($_POST["name"])) {
-    $item->name = htmlspecialchars($_POST["name"]);
+if (isset($_POST["Item"])) {
+    $item->item_name = htmlspecialchars($_POST["Item"]);
 }
-if (isset($_POST["email"])) {
-    $item->email = htmlspecialchars($_POST["email"]);
+if (isset($_POST["Price"])) {
+    $item->item_price = htmlspecialchars($_POST["Price"]);
 }
-if (isset($_POST["mobile"])) {
-    $item->mobile = htmlspecialchars($_POST["mobile"]);
+if (isset($_POST["Quantity"])) {
+    $item->item_quantity = htmlspecialchars($_POST["Quantity"]);
+}
+if (isset($_POST["store_id"])) {
+    $item->store_id = htmlspecialchars($_POST["store_id"]);
+}
+if (isset($_POST["Quantity_Unit"])) {
+    $item->item_quantity_unit = htmlspecialchars($_POST["Quantity_Unit"]);
 }
 if (isset($_POST["password"])) {
     $item->password = $_POST["password"];
@@ -55,16 +61,15 @@ if (isset($_GET["fun"])) {
 switch ($fun) {
 case "join":
     $item->joinForm();
+    break;
 case "logout":
     $item->logout();
+    break;
 case "display_list":
     $item->list_records();
     break;
 case "display_create_form":
     $item->create_record();
-    break;
-case "display_read_form":
-    $item->read_record($id);
     break;
 case "display_update_form":
     $item->update_record($id);

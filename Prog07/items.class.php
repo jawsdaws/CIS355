@@ -1,20 +1,23 @@
 <?php
 
 class Items {
-    public $id;
-    public $name;
-    public $email;
-    public $mobile;
-    public $password;
+    public $item_id;
+    public $item_name;
+    public $item_price;
+    public $item_quantity;
+    public $item_quantity_unit;
+    public $store_id;
     public $password_hashed;
     public $username = "";
     private $noerrors = true;
     private $nameError = null;
-    private $emailError = null;
-    private $mobileError = null;
+    private $priceError = null;
+    private $quantityError = null;
     private $passwordError = null;
+    private $quantityUnitError = null;
     private $title = "Lowest Regular Price";
-    private $tableName = "lrp_user";
+    private $tableName = "lrp_items";
+    private $className = "items";
 
     /**
      * This function logs out the user directing them to logout.php.
@@ -27,10 +30,12 @@ class Items {
 
     function create_record() { // display "create" form
         $this->generate_html_top (1);
-        $this->generate_form_group("name", $this->nameError, $this->name, "autofocus");
-        $this->generate_form_group("email", $this->emailError, $this->email);
-        $this->generate_form_group("mobile", $this->mobileError, $this->mobile);
-        $this->generate_form_group("password", $this->passwordError, $this->password, "", "password");
+        $this->generate_form_group("Item", $this->nameError, $this->item_name, "autofocus");
+        $this->generate_form_group("Price", $this->priceError, $this->item_price);
+        $this->generate_form_group("Quantity", $this->quantityError, $this->item_quantity);
+        $this->generate_form_group("Quantity Unit", $this->quantityUnitError, $this->item_quantity_unit);
+        $this->generate_drop_down("Store");
+
         $this->generate_html_bottom (1);
     } // end function create_record()
 
@@ -71,16 +76,16 @@ class Items {
      * @return none
      */
     function insert_db_record () {
-        if ($this->fieldsAllValid ()) { // validate user input
+    if ($this->fieldsAllValid ()) { // validate user input
             // if valid data, insert record into table
             $pdo = Database::connect();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->password_hashed = MD5($this->password);
-            $sql = "INSERT INTO $this->tableName (name,mobile,email,password_hash) values(?, ?, ?, ?)";
+            $sql = "INSERT INTO $this->tableName (item_name,item_price,store_id,item_quantity,item_quantity_unit,item_ppq) values(?,?,?,?,?,?)";
             $q = $pdo->prepare($sql);
-            $q->execute(array($this->name, $this->mobile, $this->email, $this->password_hashed));
+            $item_ppq = $this->item_price / $this->item_quantity;
+            $q->execute(array($this->item_name,$this->item_price,$this->store_id,$this->item_quantity,$this->item_quantity_unit,$item_ppq));
             Database::disconnect();
-            header("Location: $this->tableName.php"); // go back to "list"
+            header("Location: $this->className.php"); // go back to "list"
         }
         else {
             // if not valid data, go back to "create" form, with errors
@@ -92,7 +97,7 @@ class Items {
     private function select_db_record($id) {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "SELECT * FROM $this->tableName where id = ?";
+        $sql = "SELECT * FROM $this->tableName where item_id = ?";
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
         $data = $q->fetch(PDO::FETCH_ASSOC);
@@ -112,7 +117,7 @@ class Items {
             $q = $pdo->prepare($sql);
             $q->execute(array($this->name,$this->email,$this->mobile,$this->id));
             Database::disconnect();
-            header("Location: $this->tableName.php");
+            header("Location: $this->className.php");
         }
         else {
             $this->noerrors = false;
@@ -127,7 +132,7 @@ class Items {
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
         Database::disconnect();
-        header("Location: $this->tableName.php");
+        header("Location: $this->className.php");
     } // end function delete_db_record()
 
     private function generate_html_top ($fun, $id=null) {
@@ -166,12 +171,12 @@ class Items {
                         <p class='row'>
                             <h3>$funWord a $this->title</h3>
                         </p>
-                        <form class='form-horizontal' action='$this->tableName.php?fun=$funNext' method='post'>
+                        <form class='form-horizontal' action='$this->className.php?fun=$funNext' method='post'>
                     ";
     } // end function generate_html_top()
 
     private function generate_html_bottom ($fun) {
-        $backButton = "<a class='btn btn-secondary' href='$this->tableName.php'>Back</a>";
+        $backButton = "<a class='btn btn-secondary' href='$this->className.php'>Back</a>";
         switch ($fun) {
             case 1: // create
                 $funButton = "<button type='submit' class='btn btn-success'>Create</button>";
@@ -204,6 +209,20 @@ class Items {
                     ";
     } // end function generate_html_bottom()
 
+    private function generate_drop_down ($label) {
+        $pdo = Database::connect();
+        $sql = "SELECT *
+                FROM lrp_stores
+                NATURAL JOIN lrp_companies";
+        echo "<div class='form-group'>";
+        echo "<label class='control-label'>$label &nbsp;</label>";
+        echo "<select name='store_id'>";
+        foreach ($pdo->query($sql) as $row) {
+            echo "<option value='" . $row['store_id'] . "'>" . $row['store_city'] . " - " . $row['company_name'] . "</option>";
+        };
+        echo "</select> </div>";
+    }
+
     private function generate_form_group ($label, $labelError, $val, $modifier="") {
         echo "<div class='form-group'";
         echo !empty($labelError) ? ' alert alert-danger ' : '';
@@ -224,17 +243,18 @@ class Items {
             echo "</span>";
         }
         //echo "</div>"; // end div: class='controls'
+
         echo "</div>"; // end div: class='form-group'
-    } // end function generate_form_group()
+    } // end function generate_form_group(
 
     private function fieldsAllValid () {
         $valid = true;
-        echo $this->password;
-        if (empty($this->name)) {
+
+        if (empty($this->item_name)) {
             $this->nameError = 'Please enter Name';
             $valid = false;
         }
-        if (empty($this->email)) {
+        /*if (empty($this->email)) {
             $this->emailError = 'Please enter Email Address';
             $valid = false;
         }
@@ -245,7 +265,7 @@ class Items {
         if (empty($this->mobile)) {
             $this->mobileError = 'Please enter Mobile phone number';
             $valid = false;
-        }
+        }*/
         return $valid;
     } // end function fieldsAllValid()
 
@@ -274,8 +294,8 @@ class Items {
                         <h4>Logged in as " . "$this->username" . "</h4>
                     </p>
                     <p>
-                        <a href='$this->tableName.php?fun=display_create_form' class='btn btn-success'>Create</a>
-                        <a href='$this->tableName.php?fun=logout' class='btn btn-success'>Logout</a>
+                        <a href='$this->className.php?fun=display_create_form' class='btn btn-success'>Create</a>
+                        <a href='$this->className.php?fun=logout' class='btn btn-success'>Logout</a>
                     </p>
                     <div class='row'>
                         <table class='table table-striped table-bordered'>
@@ -311,9 +331,9 @@ class Items {
             $ppq = number_format((float)$row["item_ppq"], 3, '.', '');
             echo "<td>\$$ppq per " . $row['item_quantity_unit'] . "</td>";
             echo "<td width=250>";
-            echo "<a class='btn btn-warning' href='$this->tableName.php?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
+            echo "<a class='btn btn-warning' href='$this->className.php?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
             echo "&nbsp;";
-            echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";
+            echo "<a class='btn btn-danger' href='$this->className.php?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";
             echo "</td>";
             echo "</tr>";
         }
