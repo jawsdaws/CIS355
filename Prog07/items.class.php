@@ -34,15 +34,6 @@ class Items {
         $this->generate_html_bottom (1);
     } // end function create_record()
 
-    function read_record($id) { // display "read" form
-        $this->select_db_record($id);
-        $this->generate_html_top(2);
-        $this->generate_form_group("name", $this->nameError, $this->name, "disabled");
-        $this->generate_form_group("email", $this->emailError, $this->email, "disabled");
-        $this->generate_form_group("mobile", $this->mobileError, $this->mobile, "disabled");
-        $this->generate_html_bottom(2);
-    } // end function read_record()
-
     function update_record($id) { // display "update" form
         if($this->noerrors) $this->select_db_record($id);
         $this->generate_html_top(3, $id);
@@ -143,9 +134,6 @@ class Items {
         switch ($fun) {
             case 1: // create
                 $funWord = "Create"; $funNext = "insert_db_record";
-                break;
-            case 2: // read
-                $funWord = "Read"; $funNext = "none";
                 break;
             case 3: // update
                 $funWord = "Update"; $funNext = "update_db_record&id=" . $id;
@@ -308,12 +296,11 @@ class Items {
         $q = $pdo->prepare($sql);
         $q->execute();
 
-        $sql = "SELECT item_name, store_city, item_price
+        $sql = "SELECT *
                 FROM lrp_items
                 NATURAL JOIN lrp_stores
                 NATURAL JOIN lrp_companies
-                GROUP BY item_name, store_city, item_price
-                ORDER BY item_name ASC";
+                ORDER BY item_name,item_ppq ASC";
         setlocale(LC_MONETARY, 'en_US');
         $tmp = $pdo->query($sql);
         foreach ($pdo->query($sql) as $row) {
@@ -324,8 +311,6 @@ class Items {
             $ppq = number_format((float)$row["item_ppq"], 3, '.', '');
             echo "<td>\$$ppq per " . $row['item_quantity_unit'] . "</td>";
             echo "<td width=250>";
-            echo "<a class='btn btn-info' href='$this->tableName.php?fun=display_read_form&id=".$row["item_id"]."'>Read</a>";
-            echo "&nbsp;";
             echo "<a class='btn btn-warning' href='$this->tableName.php?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
             echo "&nbsp;";
             echo "<a class='btn btn-danger' href='$this->tableName.php?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";

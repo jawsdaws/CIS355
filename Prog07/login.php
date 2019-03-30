@@ -45,18 +45,17 @@ if (!empty($_POST)) { // if $_POST filled then process the form
 	// verify the username/password
 	$pdo = Database::connect();
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "SELECT * FROM lrp_users WHERE email = ? AND password_hash = ? LIMIT 1";
+	$sql = "SELECT * FROM lrp_users WHERE user_email = ? AND user_password_hash = ? LIMIT 1";
 	$q = $pdo->prepare($sql);
 	$q->execute(array($username,$passwordhash));
 	$data = $q->fetch(PDO::FETCH_ASSOC);
 
 	if($data) { // if successful login set session variables
 		// echo "success!";
-		$_SESSION['tJHSQRuoNnWUwLRe'] = $data['id'];
-		$_SESSION['name'] = $data['name'];
-		$_SESSION['email'] = $data['email'];
-		$_SESSION['mobile'] = $data['mobile'];
-		$sessionid = $data['id'];
+		$_SESSION['tJHSQRuoNnWUwLRe'] = $data['user_id'];
+		$_SESSION['name'] = $data['user_name'];
+		$_SESSION['email'] = $data['user_email'];
+		$sessionid = $data['user_id'];
 		Database::disconnect();
 		header("Location: items.php");
 		// javascript below is necessary for system to work on github
