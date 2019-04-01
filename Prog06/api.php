@@ -2,7 +2,7 @@
 /* ---------------------------------------------------------------------------
  * filename    : api.php
  * author      : James Daws	
- * description : This program returns a JSON of the entire database.
+ * description : This program returns a JSON of the entire items database.
  * ---------------------------------------------------------------------------
  */
 require "database.php";
@@ -13,9 +13,10 @@ $sql = "SELECT *
 		FROM lrp_items
         NATURAL JOIN lrp_stores
         NATURAL JOIN lrp_companies";
-foreach ($pdo->query($sql) as $row) {
-	echo json_encode($row);
-}
+header('Content-Type: application/json; charset=utf-8');
 
+$data = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+echo json_encode($data);
 Database::disconnect();
 ?>
