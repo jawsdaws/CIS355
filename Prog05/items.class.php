@@ -327,7 +327,7 @@ class Items {
                 NATURAL JOIN lrp_companies
                 ORDER BY item_name,item_ppq ASC";
         setlocale(LC_MONETARY, 'en_US');
-        $tmp = $pdo->query($sql);
+        
         foreach ($pdo->query($sql) as $row) {
             echo "<tr>";
             echo "<td>". $row["item_name"] . "</td>";
