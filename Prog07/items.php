@@ -6,7 +6,7 @@
  */
 session_start();
 
-//Controls the seesion.  If
+//Controls the session.  If
 if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
     session_destroy();
     header('Location: login.php');     // go to login page

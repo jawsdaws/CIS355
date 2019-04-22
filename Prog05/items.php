@@ -4,14 +4,6 @@
  * php version 7.2.10
  *
  */
-session_start();
-
-//Controls the session.  If
-if(!isset($_SESSION["tJHSQRuoNnWUwLRe"])) { // if "user" not set,
-    session_destroy();
-    header('Location: login.php');     // go to login page
-    exit();
-}
 
 // include the class that handles database connections
 require "database.php";
@@ -30,22 +22,22 @@ if(isset($_SESSION["email"])) {
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 }
-if (isset($_POST["Item"])) {
-    $item->item_name = htmlspecialchars($_POST["Item"]);
+if (isset($_GET["Item"])) {
+    $item->item_name = htmlspecialchars($_GET["Item"]);
 }
-if (isset($_POST["Price"])) {
-    $item->item_price = htmlspecialchars($_POST["Price"]);
+if (isset($_GET["Price"])) {
+    $item->item_price = htmlspecialchars($_GET["Price"]);
 }
-if (isset($_POST["Quantity"])) {
-    $item->item_quantity = htmlspecialchars($_POST["Quantity"]);
+if (isset($_GET["Quantity"])) {
+    $item->item_quantity = htmlspecialchars($_GET["Quantity"]);
 }
-if (isset($_POST["store_id"])) {
-    $item->store_id = htmlspecialchars($_POST["store_id"]);
+if (isset($_GET["store_id"])) {
+    $item->store_id = htmlspecialchars($_GET["store_id"]);
 }
-if (isset($_POST["Quantity_Unit"])) {
-    $item->item_quantity_unit = htmlspecialchars($_POST["Quantity_Unit"]);
+if (isset($_GET["Quantity_Unit"])) {
+    $item->item_quantity_unit = htmlspecialchars($_GET["Quantity_Unit"]);
 }
-if (isset($_POST["password"])) {
+if (isset($_GET["password"])) {
     $item->password = $_POST["password"];
 }
 

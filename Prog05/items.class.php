@@ -19,15 +19,6 @@ class Items {
     private $tableName = "lrp_items";
     private $className = "items";
 
-    /**
-     * This function logs out the user directing them to logout.php.
-     *
-     * @return none
-     */
-    function logout() {
-        header("Location: logout.php");
-    }
-
     function create_record() { // display "create" form
         $this->generate_html_top (1);
         $this->generate_form_group("Item", $this->nameError, $this->item_name, "autofocus");
@@ -88,7 +79,7 @@ class Items {
             $item_ppq = $this->item_price / $this->item_quantity;
             $q->execute(array($this->item_name,$this->item_price,$this->store_id,$this->item_quantity,$this->item_quantity_unit,$item_ppq));
             Database::disconnect();
-            header("Location: $this->className.php"); // go back to "list"
+            header("Location: http://csis.svsu.edu/~jpdaws/CIS355/Prog05/items.php?fun=display_list"); // go back to "list"
         }
         else {
             // if not valid data, go back to "create" form, with errors
@@ -122,7 +113,7 @@ class Items {
             $q = $pdo->prepare($sql);
             $q->execute(array($this->item_name,$this->item_price,$this->item_quantity,$this->item_quantity_unit,$this->store_id,$this->item_id));
             Database::disconnect();
-            header("Location: $this->className.php");
+			header("Location: http://csis.svsu.edu/~jpdaws/CIS355/Prog05/items.php?fun=display_list");
         }
         else {
             $this->noerrors = false;
@@ -137,19 +128,22 @@ class Items {
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
         Database::disconnect();
-        header("Location: $this->className.php");
+        header("Location: http://csis.svsu.edu/~jpdaws/CIS355/Prog05/items.php?fun=display_list");
     } // end function delete_db_record()
 
     private function generate_html_top ($fun, $id=null) {
         switch ($fun) {
             case 1: // create
-                $funWord = "Create"; $funNext = "insert_db_record";
+                $funWord = "Create";
+				$funNext = "insert_db_record";
                 break;
             case 3: // update
-                $funWord = "Update"; $funNext = "update_db_record&id=" . $id;
-                break;
+                $funWord = "Update";
+				$funNext = "update_db_record";
+				break;
             case 4: // delete
-                $funWord = "Delete"; $funNext = "delete_db_record&id=" . $id;
+                $funWord = "Delete";
+				$funNext = "delete_db_record";
                 break;
             default:
                 echo "Error: Invalid function: generate_html_top()";
@@ -176,12 +170,14 @@ class Items {
                         <p class='row'>
                             <h3>$funWord a $this->title</h3>
                         </p>
-                        <form class='form-horizontal' action='$this->className.php?fun=$funNext' method='post'>
+                        <form class='form-horizontal' action='$this->className.html' method='get'>
+						<input type='hidden' name='fun' value='$funNext' />
+						<input type='hidden' name='id' value='$id' />
                     ";
     } // end function generate_html_top()
 
     private function generate_html_bottom ($fun) {
-        $backButton = "<a class='btn btn-secondary' href='$this->className.php'>Back</a>";
+        $backButton = "<a class='btn btn-secondary' href='$this->className.html'>Back</a>";
         switch ($fun) {
             case 1: // create
                 $funButton = "<button type='submit' class='btn btn-success'>Create</button>";
@@ -296,11 +292,9 @@ class Items {
                     <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog05/delete.png'>Delete</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
-                        <h4>Logged in as " . "$this->username" . "</h4>
                     </p>
                     <p>
-                        <a href='$this->className.php?fun=display_create_form' class='btn btn-success'>Create</a>
-                        <a href='$this->className.php?fun=logout' class='btn btn-success'>Logout</a>
+                        <a href='items.html?fun=display_create_form' class='btn btn-success'>Create</a>
                     </p>
                     <div class='row'>
                         <table class='table table-striped table-bordered'>
@@ -336,9 +330,9 @@ class Items {
             $ppq = number_format((float)$row["item_ppq"], 3, '.', '');
             echo "<td>\$$ppq per " . $row['item_quantity_unit'] . "</td>";
             echo "<td width=250>";
-            echo "<a class='btn btn-warning' href='$this->className.php?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
+            echo "<a class='btn btn-warning' href='items.html?fun=display_update_form&id=".$row["item_id"]."'>Update</a>";
             echo "&nbsp;";
-            echo "<a class='btn btn-danger' href='$this->className.php?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";
+            echo "<a class='btn btn-danger' href='items.html?fun=display_delete_form&id=".$row["item_id"]."'>Delete</a>";
             echo "</td>";
             echo "</tr>";
         }
