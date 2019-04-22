@@ -289,11 +289,7 @@ class Items {
             </head>
             <body>
                 <div class='container'>
-                    <a class='btn btn-success' href='https://github.com/jawsdaws/CIS355/tree/master/Prog05'>Github Repo</a>
-                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog05/uml.png'>UML</a>
-                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog05/read.png'>Read</a>
-                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog05/update.png'>Update</a>
-                    <a class='btn btn-success' href='https://csis.svsu.edu/~jpdaws/CIS355/Prog05/delete.png'>Delete</a>
+                    <a class='btn btn-success' href='https://github.com/jawsdaws/CIS355/tree/master/Prog07'>Github Repo</a>
                     <p class='row'>
                         <h3>$this->title" . "s" . "</h3>
                         <h4>Logged in as " . "$this->username" . "</h4>
